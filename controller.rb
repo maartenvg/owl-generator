@@ -1,4 +1,5 @@
 require 'sinatra'
+require "sinatra/jsonp"
 require 'json'
 require './owl.rb'
 require './search.rb'
@@ -19,5 +20,5 @@ get '/random/:size' do
 
   content_type :json
   load = {original: url, image: image}
-  load.to_json
+  JSONP load
 end

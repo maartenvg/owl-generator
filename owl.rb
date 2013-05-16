@@ -76,7 +76,7 @@ module Owls
 
     def format_pixels(pixels, width)
       str = ""
-      pixels.each_slice(width) { |s| str = str + s.join + "\n" }
+      pixels.each_slice(width) { |s| str = str + s.join + '\n'}
       str
     end
   end
