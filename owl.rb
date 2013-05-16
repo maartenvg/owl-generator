@@ -10,6 +10,10 @@ module Owls
     OUTPUT_ENTITIES = ['&#9608;', '&#9619;', '&#9617;', "&nbsp;"]
     LOGGER = Logger.new STDOUT
 
+    def initialize(size)
+      @size = size
+    end
+
     def generate_owl(url)
       LOGGER.debug "start image retrieval"
       img = fetch_image(url)
@@ -22,6 +26,9 @@ module Owls
 
       LOGGER.debug "start image format"
       format_pixels(pixels, img.columns)
+    rescue
+      LOGGER.error "Something just went horribly wrong while parsing the image"
+      return ""
     end
 
     private
@@ -43,7 +50,7 @@ module Owls
       img = img.level_channel(Magick::GreenChannel, black_point = 0, white_point = 50000, gamma = 2)
 
       # Reduce size and number of colors
-      img = img.resize_to_fit(200, 150)
+      img = img.resize_to_fit(@size, @size)
       img = img.posterize(10)
 
       img = img.quantize(5, Magick::GRAYColorspace)
