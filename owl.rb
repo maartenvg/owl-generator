@@ -3,26 +3,35 @@ require 'RMagick'
 require 'net/http'
 require 'json'
 require 'open-uri'
+require 'logger'
 
 module Owls
   class OwlGenerator
     OUTPUT_ENTITIES = ['&#9608;', '&#9619;', '&#9617;', "&nbsp;"]
+    LOGGER = Logger.new STDOUT
 
     def generate_owl(url)
+      LOGGER.debug "start image retrieval"
       img = fetch_image(url)
 
-      img = transform_image(file)
+      LOGGER.debug "start image transform"
+      img = transform_image(img)
+
+      LOGGER.debug "start image translate"
       pixels = translate_image(img)
 
-      format_pixels(pixels)
+      LOGGER.debug "start image format"
+      format_pixels(pixels, img.columns)
     end
 
     private
 
     def fetch_image(url)
+      LOGGER.debug "Open URL"
       file = open(url)
 
       img = Magick::ImageList.new
+      LOGGER.debug "Read blob"
       img.from_blob(file.read)
     end
 
@@ -58,8 +67,10 @@ module Owls
       pixels.map { |pixel| OUTPUT_ENTITIES[values[pixel]] }
     end
 
-    def format_pixels(pixels)
-      pixels.each_slice(img.columns) { |s| str = str + s.join + "\n" }
+    def format_pixels(pixels, width)
+      str = ""
+      pixels.each_slice(width) { |s| str = str + s.join + "\n" }
+      str
     end
   end
 end

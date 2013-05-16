@@ -6,7 +6,8 @@ module Owls
 
     def get_owl_urls
       result = search_for_owls
-      retrieve_image_urls(result)
+
+      retrieve_image_urls(result.body)
     end
 
     private

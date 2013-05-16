@@ -3,7 +3,6 @@ require './owl.rb'
 require './search.rb'
 
 configure do
-  set :images, images
 end
 
 get '/random' do
